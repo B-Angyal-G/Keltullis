@@ -1,0 +1,13 @@
+*~
+*#
+*.swp
+.*.*
+bin/
+obj/
+.env
+.vs
+
+*test*
+__pycache__/
+
+Session.vim
