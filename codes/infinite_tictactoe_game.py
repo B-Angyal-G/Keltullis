@@ -3,27 +3,12 @@ import math as m
 import copy as c
 
 from abstract_game import abstract_game, Sign
+from infinite_tictactoe_game_display import infinite_tictactoe_display
 
 
-class infinite_tictactoe(abstract_game):
+
+class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
     size = 9
-
-    def print_signs(self) -> None:
-        s = "Táblázat:\n"
-        sq = int(m.sqrt(self.size))
-        for row in self.board.reshape((sq, sq)):
-            for element in row:
-                if element <= 8 and element > 1:
-                    s = s + "o" + " "
-                elif element > 8:
-                    s = s + "x" + " "
-                else:
-                    s = s + "." + " "
-            s += "\n"
-
-        s = s + "Sign: " + str(self.sign.value)
-        print(s)
-    
     
     def make_step(self, position: int) -> "infinite_tictactoe":
         next_sign = self.next_player()
