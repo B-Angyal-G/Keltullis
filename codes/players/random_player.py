@@ -1,8 +1,9 @@
 import numpy as np
 import random
 
-from abstract_player import abstract_player
-from abstract_game import abstract_game
+from players.abstract_player import abstract_player
+from games.abstract_game import abstract_game
+
 
 
 

@@ -2,17 +2,22 @@ import numpy as np
 import math as m
 import copy as c
 
-from abstract_game import abstract_game, Sign
-from infinite_tictactoe_game_display import infinite_tictactoe_display
+from utils.tictactoe_transformations import *
+
+from games.abstract_game import abstract_game, Sign
+from numpy.typing import NDArray
+
+from displays.infinite_tictactoe_game_display import infinite_tictactoe_display
+
 
 
 
 class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
     size = 9
-    
+
     def make_step(self, position: int) -> "infinite_tictactoe":
         next_sign = self.next_player()
-        next_game = infinite_tictactoe(sign = next_sign)
+        next_game = infinite_tictactoe(sign=next_sign)
         next_game.board = c.copy(self.board)
 
         # Kör: 2, 4, 8
@@ -34,9 +39,8 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
                     next_game.board[i] *= 2
                 elif self.board[i] == 64 or self.board[i] == 0:
                     next_game.board[i] = 1
-                    
-        return next_game
 
+        return next_game
 
     def board2str(self) -> str:
         s = ""
@@ -48,10 +52,9 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         return s + str(self.sign.value)
 
-
     @classmethod
-    def str2board(cls, str_board : str) -> "infinite_tictactoe":
-        read_game = infinite_tictactoe(sign = int(str_board[-1]))
+    def str2board(cls, str_board: str) -> "infinite_tictactoe":
+        read_game = infinite_tictactoe(sign=int(str_board[-1]))
         s = 0
         for i in range(read_game.size):
             if str_board[s] in {'2', '4', '8'}:
@@ -68,7 +71,6 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
             s += 1
 
         return read_game
-
 
     def get_winner(self) -> int:
         tmp_board = c.copy(self.board)
@@ -98,12 +100,11 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
         # Senki sem nyert
         return 0
 
-
     def get_force_win(self) -> int:
         tmp_board = np.zeros(self.size, dtype='int32')
-        
+
         # Meglévő állás másolása a tmp_board-ba, úgy hogy a legöregebb jelet nem másoljuk,
-        # mert miután teszünk egyet az eltűnik 
+        # mert miután teszünk egyet az eltűnik
         if self.sign == Sign.CIRCLE:
             limit_min = 6
             limit_max = 12
@@ -117,7 +118,7 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
             for i in range(9):
                 if self.board[i] != 64 and self.board[i] > 1:
                     tmp_board[i] = self.board[i]
-        
+
         tmp_matrix = np.reshape(tmp_board, (3, 3))
 
         # Sorok és oszlopok ellenőrzése
@@ -158,5 +159,103 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
         return -1
 
 
-    def decision_preparation(self) -> "infinite_tictactoe":
-        pass
+
+    # Egységes álláshoz szükséges transzformáció megkeresése
+    def find_transformation(self) -> int:
+        tmp_board = c.copy(self.board)
+        tmp_matrix = np.reshape(tmp_board, (3, 3))
+
+        # 2x3-as részek összege
+        board_forms6_sum = np.array(
+            [np.sum(tmp_matrix[:2]),
+             np.sum(tmp_matrix[:, 1:3]),
+             np.sum(tmp_matrix[1:3]),
+             np.sum(tmp_matrix[:, :2])],
+            dtype='int32'
+        )
+
+        # 2x2-es sarkok összege
+        board_forms4_sum = np.array(
+            [np.sum(tmp_matrix[:2][:, :2]),
+             np.sum(tmp_matrix[:2][:, 1:]),
+             np.sum(tmp_matrix[1:][:, 1:]),
+             np.sum(tmp_matrix[1:][:, :2])],
+            dtype='int32'
+        )
+
+        # 2x3-asok maximum elemeinek indexei
+        idx_max6 = np.flatnonzero(board_forms6_sum == board_forms6_sum.max())
+        index_max6 = idx_max6[0]
+
+        # Ha csak egy max 2x3-as rész van
+        if idx_max6.size == 1:
+            if board_forms4_sum[index_max6] > board_forms4_sum[(index_max6 + 1) % 4]:
+                return index_max6
+            else:
+                return index_max6 + 4
+
+        else:
+            index_max4 = np.argmax(board_forms4_sum)
+
+            match index_max4:
+                case 0:
+                    if self.board[1] >= self.board[3]:
+                        return 0
+                    return 7
+                case 1:
+                    if self.board[5] >= self.board[1]:
+                        return 1
+                    return 4
+                case 2:
+                    if self.board[7] >= self.board[5]:
+                        return 2
+                    return 5
+                case 3:
+                    if self.board[3] >= self.board[7]:
+                        return 3
+                    return 6
+
+    # Tábla forgatása egységes állásra, transzformáció visszaadása is
+    def transform_board(self) -> tuple[NDArray[int], int]:
+        tmp_board = c.copy(self.board)
+        t = self.find_transformation()
+
+        return np.dot(tmp_board, transformations[t]), t
+
+    def mask_symmetric(self) -> None:
+        board_refl_vert = np.dot(self.board, transformations[4])
+        board_refl_diag = np.dot(self.board, transformations[7])
+
+        VERT_SYMMETRY : int = 0
+        DIAG_SYMMETRY : int = 0
+
+        if np.array_equal(self.board, board_refl_vert):
+            VERT_SYMMETRY = 1
+        if np.array_equal(self.board, board_refl_diag):
+            DIAG_SYMMETRY = 1
+
+        if VERT_SYMMETRY == 1:
+            for i in range(3):
+                if self.board[2 + 3 * i] == 1:
+                    self.board[2 + 3 * i] = 0
+
+        if DIAG_SYMMETRY == 1:
+            if self.board[3] == 1:
+                self.board[3] = 0
+            if self.board[6] == 1:
+                self.board[6] = 0
+            if self.board[7] == 1:
+                self.board[7] = 0
+
+    def decision_preparation(self) -> tuple["infinite_tictactoe", int]:
+        transformed_game = infinite_tictactoe()
+        transformed_board, tran = self.transform_board()
+
+        transformed_game.board = c.copy(transformed_board)
+        transformed_game.mask_symmetric()
+        transformed_game.sign = self.sign
+
+        return transformed_game, tran
+
+    def decision_decoder(self, result : int, tran : int) -> int:
+        return np.argmax(transformations[tran][:, result:result + 1])    # result-nak megfelelő oszlopban levő 1-es helye

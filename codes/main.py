@@ -1,13 +1,13 @@
 # GAMES
-from infinite_tictactoe_game import infinite_tictactoe
+from games.infinite_tictactoe_game import infinite_tictactoe
 
 # PLAYERS
-from random_player import random_player
-from minimax_player import minimax_player
-from minimax_alphabeta_player import minimax_alphabeta_player
-from controller import controller
+from players.minimax_player import minimax_player
+from players.minimax_alphabeta_player import minimax_alphabeta_player
+from players.random_player import random_player
+from players.controller import controller
 
-from runtime import runtime
+from utils.runtime import runtime
 
 
 if __name__ == "__main__":
@@ -17,6 +17,12 @@ if __name__ == "__main__":
     game_string = "4032168020640"
     game = infinite_tictactoe.str2board(game_string)
 
+
+    game.print4play()
+    print()
+    print('col')
+    print('row')
+    exit()
     minimax_alphabeta_controller = controller(game, player_minimax_alphabeta)
     result = runtime(minimax_alphabeta_controller.solve)
     print('Kontroller eredmény:', result)

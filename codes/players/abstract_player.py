@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from abstract_game import abstract_game
+from games.abstract_game import abstract_game
 
 
 

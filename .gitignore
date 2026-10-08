@@ -2,6 +2,7 @@
 *#
 *.swp
 .*.*
+
 bin/
 obj/
 .env
@@ -9,5 +10,6 @@ obj/
 
 *test*
 __pycache__/
+*.pyc
 
 Session.vim
