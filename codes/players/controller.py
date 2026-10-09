@@ -15,11 +15,7 @@ class controller:
 
         
     def solve(self) -> tuple[int, ...]:
-        # print('In controller:')
-        # print(self.game)
         transformed_game, tran = self.game.decision_preparation()
-        # print('In controller:')
-        # print(transformed_game)
         inner_result = self.player.get_step(transformed_game)
         
         return self.game.decision_decoder(inner_result, tran)
