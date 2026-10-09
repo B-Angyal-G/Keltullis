@@ -2,10 +2,11 @@ import numpy as np
 import math as m
 import copy as c
 
-from utils.tictactoe_transformations import *
-
-from games.abstract_game import abstract_game, Sign
+from games.abstract_game import abstract_game
 from numpy.typing import NDArray
+
+from utils.tictactoe_transformations import *
+from utils.sign import Sign
 
 from displays.infinite_tictactoe_game_display import infinite_tictactoe_display
 
@@ -13,17 +14,16 @@ from displays.infinite_tictactoe_game_display import infinite_tictactoe_display
 
 
 class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
-    size = 9
+    size : int = 9
 
-    def make_step(self, position: int) -> "infinite_tictactoe":
-        next_sign = self.next_player()
-        next_game = infinite_tictactoe(sign=next_sign)
+    def make_step(self, position : tuple[int]) -> "infinite_tictactoe":
+        next_game : abstract_game = infinite_tictactoe( sign = self.next_player() )
         next_game.board = c.copy(self.board)
 
         # Kör: 2, 4, 8
         if self.sign == Sign.CIRCLE:
             for i in range(9):
-                if i == position:
+                if i == position[0]:
                     next_game.board[i] = 2
                 elif self.board[i] == 2 or self.board[i] == 4:
                     next_game.board[i] *= 2
@@ -33,7 +33,7 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
         # X: 16, 32, 64
         if self.sign == Sign.CROSS:
             for i in range(9):
-                if i == position:
+                if i == position[0]:
                     next_game.board[i] = 16
                 elif self.board[i] == 16 or self.board[i] == 32:
                     next_game.board[i] *= 2
@@ -42,8 +42,10 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         return next_game
 
+
+
     def board2str(self) -> str:
-        s = ""
+        s : str = ""
         for element in self.board:
             if element > 1:
                 s += str(element)
@@ -52,10 +54,12 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         return s + str(self.sign.value)
 
+
+
     @classmethod
-    def str2board(cls, str_board: str) -> "infinite_tictactoe":
-        read_game = infinite_tictactoe(sign=int(str_board[-1]))
-        s = 0
+    def str2board(cls, str_board : str) -> "infinite_tictactoe":
+        read_game : abstract_game = infinite_tictactoe(sign=int(str_board[-1]))
+        s : int = 0
         for i in range(read_game.size):
             if str_board[s] in {'2', '4', '8'}:
                 read_game.board[i] = int(str_board[s])
@@ -72,9 +76,11 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         return read_game
 
+
+
     def get_winner(self) -> int:
-        tmp_board = c.copy(self.board)
-        tmp_matrix = np.reshape(tmp_board, (3, 3))
+        tmp_board : NDArray = c.copy(self.board)
+        tmp_matrix : NDArray = np.reshape(tmp_board, (3, 3))
 
         # Sorok és oszlopok ellenőrzése
         for i in range(3):
@@ -92,19 +98,23 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         # o nyert
         if np.sum(diag_main) == 14 or np.sum(diag_sec) == 14:
-            return 1
+            return 0
         # x nyert
         elif np.sum(diag_main) == 112 or np.sum(diag_sec) == 112:
-            return -1
+            return 1
 
         # Senki sem nyert
-        return 0
+        return -1
 
-    def get_force_win(self) -> int:
-        tmp_board = np.zeros(self.size, dtype='int32')
+
+
+    def get_force_win(self) -> tuple[int]:
+        tmp_board : NDArray = np.zeros(self.size, dtype='int32')
+        limit_min : int
+        limit_max : int
 
         # Meglévő állás másolása a tmp_board-ba, úgy hogy a legöregebb jelet nem másoljuk,
-        # mert miután teszünk egyet az eltűnik
+        # mert miután teszünk egyet az úgyis eltűnik
         if self.sign == Sign.CIRCLE:
             limit_min = 6
             limit_max = 12
@@ -119,7 +129,7 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
                 if self.board[i] != 64 and self.board[i] > 1:
                     tmp_board[i] = self.board[i]
 
-        tmp_matrix = np.reshape(tmp_board, (3, 3))
+        tmp_matrix : NDArray = np.reshape(tmp_board, (3, 3))
 
         # Sorok és oszlopok ellenőrzése
         for i in range(3):
@@ -132,12 +142,12 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
             if sum_row >= limit_min and sum_row <= limit_max:
                 for k in range(3):
                     if row[0][k] == 0 or row[0][k] == 1:
-                        return 3 * i + k
+                        return (3 * i + k, )
 
             if sum_col >= limit_min and sum_col <= limit_max:
                 for k in range(3):
                     if col[k][0] == 0 or col[k][0] == 1:
-                        return 3 * k + i
+                        return (3 * k + i, )
 
         # Átlók ellenőrzése
         diag_main = np.diag(tmp_matrix)
@@ -149,21 +159,21 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
         if sum_diag_main >= limit_min and sum_diag_main <= limit_max:
             for k in range(3):
                 if diag_main[k] == 0 or diag_main[k] == 1:
-                    return 4 * k
+                    return (4 * k, )
 
         if sum_diag_sec >= limit_min and sum_diag_sec <= limit_max:
             for k in range(3):
                 if diag_sec[k] == 0 or diag_sec[k] == 1:
-                    return 2 * k + 2
+                    return (2 * k + 2, )
 
-        return -1
+        return (-1, )
 
 
 
     # Egységes álláshoz szükséges transzformáció megkeresése
     def find_transformation(self) -> int:
-        tmp_board = c.copy(self.board)
-        tmp_matrix = np.reshape(tmp_board, (3, 3))
+        tmp_board : NDArray = c.copy(self.board)
+        tmp_matrix : NDArray = np.reshape(tmp_board, (3, 3))
 
         # 2x3-as részek összege
         board_forms6_sum = np.array(
@@ -215,19 +225,24 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
                         return 3
                     return 6
 
+
+    
     # Tábla forgatása egységes állásra, transzformáció visszaadása is
     def transform_board(self) -> tuple[NDArray[int], int]:
-        tmp_board = c.copy(self.board)
-        t = self.find_transformation()
+        tmp_board : NDArray = c.copy(self.board)
+        t : int = self.find_transformation()
 
         return np.dot(tmp_board, transformations[t]), t
 
+
+
     def mask_symmetric(self) -> None:
-        board_refl_vert = np.dot(self.board, transformations[4])
-        board_refl_diag = np.dot(self.board, transformations[7])
+        board_refl_vert : NDArray = np.dot(self.board, transformations[4])
+        board_refl_diag : NDArray = np.dot(self.board, transformations[7])
 
         VERT_SYMMETRY : int = 0
         DIAG_SYMMETRY : int = 0
+
 
         if np.array_equal(self.board, board_refl_vert):
             VERT_SYMMETRY = 1
@@ -247,8 +262,10 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
             if self.board[7] == 1:
                 self.board[7] = 0
 
+
+
     def decision_preparation(self) -> tuple["infinite_tictactoe", int]:
-        transformed_game = infinite_tictactoe()
+        transformed_game : abstract_game = infinite_tictactoe()
         transformed_board, tran = self.transform_board()
 
         transformed_game.board = c.copy(transformed_board)
@@ -257,5 +274,7 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
         return transformed_game, tran
 
-    def decision_decoder(self, result : int, tran : int) -> int:
-        return np.argmax(transformations[tran][:, result:result + 1])    # result-nak megfelelő oszlopban levő 1-es helye
+
+
+    def decision_decoder(self, inner_result : tuple[int], tran : int) -> tuple[int]:
+        return ( np.argmax(transformations[tran][:, inner_result[0]:inner_result[0] + 1]), )    # result[0]-nak megfelelő oszlopban levő 1-es helye

@@ -1,7 +1,7 @@
 import time
 from typing import Callable, Any
 
-def runtime(func: Callable[..., Any], *args, **kwargs):
+def runtime(func: Callable[..., Any], *args, **kwargs) -> tuple[tuple[int, ...], float]:
     start = time.perf_counter()
     result = func(*args, **kwargs)
     elapsed = time.perf_counter() - start

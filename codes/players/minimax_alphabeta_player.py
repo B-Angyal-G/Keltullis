@@ -2,20 +2,23 @@ import numpy as np
 import random as r
 
 from players.abstract_player import abstract_player
-from games.abstract_game import abstract_game, Sign
+from games.abstract_game import abstract_game
+
+from utils.sign import Sign
+
 
 
 class minimax_alphabeta_player(abstract_player):
-    def get_step(self, game: abstract_game) -> int:
-        DEPTH: int = 12
-        alpha: int = -2
-        beta:  int = 2
+    def get_step(self, game : abstract_game) -> tuple[int]:
+        DEPTH : int = 12
+        alpha : int = -2
+        beta :  int = 2
         return self.minimax_alphabeta(game, alpha, beta, DEPTH)[0]
 
-    def minimax_alphabeta(self, game: abstract_game, alpha: int, beta: int, DEPTH: int) -> tuple[int, float]:  # [step, value]
+    def minimax_alphabeta(self, game : abstract_game, alpha : int, beta : int, DEPTH : int) -> tuple[tuple[int], float]:  # [step, value]
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
-        if FORCE_WIN != -1:
+        if FORCE_WIN[0] != -1:
             if game.sign == Sign.CIRCLE:
                 return FORCE_WIN, 1
             elif game.sign == Sign.CROSS:
@@ -24,11 +27,11 @@ class minimax_alphabeta_player(abstract_player):
         while DEPTH != 0:
             # Megvizsgálandó ágak felvétele -> possible_steps
             # 0-val lesz inicializálva
-            possible_steps: dict[int, float] = dict()
+            possible_steps : dict[tuple[int], float] = dict()
 
-            for element in range(game.size):
-                if game.board[element] == 1:
-                    possible_steps[element] = 0
+            for position in range(game.size):
+                if game.board[position] == 1:
+                    possible_steps[(position, )] = 0
 
             # Lehetséges lépésekhez értékek hozzárendelése
             # TODO: FORBIDDEN_POS HASZNÁLATA
@@ -67,4 +70,4 @@ class minimax_alphabeta_player(abstract_player):
 
         # Elértünk az előre kijelölt számítási mélységet
         # véletlenszerű értékkel visszatérünk
-        return [-1, r.uniform(-0.9, 0.9)]
+        return [(-1, ), r.uniform(-0.9, 0.9)]
