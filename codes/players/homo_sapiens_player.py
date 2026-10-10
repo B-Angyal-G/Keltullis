@@ -12,14 +12,18 @@ class homo_sapiens_player(abstract_player):
         game.print4play()
 
         # Beolvasandó értékek határai
-        sq_size = int(m.sqrt(game.size))
-        valid_set = set(i for i in range(1, sq_size + 1))
+        sq_size : int = int(m.sqrt(game.size))
+        valid_set : set[int] = set(i for i in range(1, sq_size + 1))
         
 
         VALID = 0
         while VALID == 0:
-            row = int(input("Row: "))
-            col = int(input("Col: "))
+            try:
+                row = int(input("Row: "))
+                col = int(input("Col: "))
+            except:
+                pass
+
 
             if row in valid_set and col in valid_set:
                 step = 3 * (row - 1) + (col - 1)

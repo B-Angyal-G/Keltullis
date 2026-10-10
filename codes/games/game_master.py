@@ -25,4 +25,4 @@ class game_master:
 
 
         self.game.print4play()
-        print(f"Nyertes { Sign( self.game.get_winner() ).name }!")
+        print(f"Nyertes: { Sign( self.game.get_winner() ).name }!")
