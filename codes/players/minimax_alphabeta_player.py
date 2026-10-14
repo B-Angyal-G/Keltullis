@@ -27,9 +27,9 @@ class minimax_alphabeta_player(abstract_player):
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
             if game.sign == Sign.CIRCLE:
-                return ((FORCE_WIN, ), 1)
+                return FORCE_WIN, 1
             elif game.sign == Sign.CROSS:
-                return ((FORCE_WIN, ), -1)
+                return FORCE_WIN, -1
 
         while DEPTH != 0:
             # Megvizsgálandó ágak felvétele -> possible_steps
