@@ -10,10 +10,17 @@ from utils.sign import Sign
 
 class minimax_alphabeta_player(abstract_player):
     def get_step(self, game : abstract_game) -> tuple[int]:
-        DEPTH : int = 12
-        alpha : int = -2
-        beta :  int = 2
-        return self.minimax_alphabeta(game, alpha, beta, DEPTH)[0]
+        # game.print_board()
+        DEPTH: int = 12
+        alpha: int = -2
+        beta: int = 2
+        
+        result = self.minimax_alphabeta(game, alpha, beta, DEPTH)
+        if result[1] == 1 or result[1] == -1:
+            # Ha a visszatérési érték +/- 1, akkor egyértelmű nyerést talált.
+            print('Van nyerő stratégiám!')
+            
+        return result[0]
 
     def minimax_alphabeta(self, game : abstract_game, alpha : int, beta : int, DEPTH : int) -> tuple[tuple[int], float]:  # [step, value]
         # Van-e nyerő lépés
