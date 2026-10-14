@@ -47,6 +47,7 @@ class abstract_game(abstract_game_display, ABC):
 
     # Játéktábla transzformálása egyszerűsítéshez,
     # Bizonyos elemek kizárása szimmetria vagy tanulás útján
+    # Nyerő lépéseket, egyértelmű védekező lépéseket itt kell beírni/felvenni a játék táblájára
     # int : kódolás kulcsa
     @abstractmethod
     def decision_preparation(self) -> tuple["abstract_game", int]: ...
