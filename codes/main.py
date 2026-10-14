@@ -7,7 +7,6 @@ from players.homo_sapiens_player import homo_sapiens_player
 from players.minimax_player import minimax_player
 from players.minimax_alphabeta_player import minimax_alphabeta_player
 from players.random_player import random_player
-from players.controller import controller
 
 from utils.runtime import runtime
 
@@ -24,10 +23,7 @@ if __name__ == "__main__":
 
         game_string = "4032168020640"
         game : abstract_game = infinite_tictactoe.str2board(game_string)
-
-
-        minimax_controller : controller = controller(game, player_minimax)
-        minimax_alphabeta_controller : controller = controller(game, player_minimax_alphabeta)
+        
 
 
         print('String-ből beolvasott állás:')
@@ -51,10 +47,6 @@ if __name__ == "__main__":
 
         game : abstract_game = infinite_tictactoe()
 
-        minimax_controller : controller = controller(game, player_minimax)
-        minimax_alphabeta_controller : controller = controller(game, player_minimax_alphabeta)
-
         game_master : game_master = game_master(player_homo_sapiens, player_minimax_alphabeta, game)
-
 
         game_master.play()
