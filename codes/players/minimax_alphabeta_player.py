@@ -16,9 +16,9 @@ class minimax_alphabeta_player(abstract_player):
         beta: int = 2
         
         result = self.minimax_alphabeta(game, alpha, beta, DEPTH)
-        if result[1] == 1 or result[1] == -1:
-            # Ha a visszatérési érték +/- 1, akkor egyértelmű nyerést talált.
-            print('Van nyerő stratégiám!')
+        # if result[1] == 1 or result[1] == -1:
+        #     # Ha a visszatérési érték +/- 1, akkor egyértelmű nyerést talált.
+        #     print('Van nyerő stratégiám!')
             
         return result[0]
 
