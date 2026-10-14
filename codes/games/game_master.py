@@ -14,8 +14,13 @@ class game_master:
         current_player : abstract_player = self.players[0]
 
         while self.game.get_winner() == -1:
-            # Lépés meghatározása
-            step = current_player.get_step(self.game)
+            # Lépés meghatározása, gép lépésénél alkalmazni kell az egyszerűsítéseket
+            if type(current_player).__name__ != 'homo_sapiens_player':
+                transformed_game, tran = self.game.decision_preparation()
+                inner_result = current_player.get_step(transformed_game)
+                step = self.game.decision_decoder(inner_result, tran)
+            else:
+                step = current_player.get_step(self.game)
 
             # Lépés megtétele -> Sign lép
             self.game = self.game.make_step(step)
