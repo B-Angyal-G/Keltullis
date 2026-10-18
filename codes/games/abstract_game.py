@@ -24,7 +24,7 @@ class abstract_game(abstract_game_display, ABC):
 
     # Lépés megtétele -> Új játékállás
     @abstractmethod
-    def make_step(self, position : tuple[int, ...]) -> "abstract_game": ...
+    def make_move(self, position : tuple[int, ...]) -> "abstract_game": ...
 
     # Állás string-be kódolása
     @abstractmethod
@@ -55,3 +55,9 @@ class abstract_game(abstract_game_display, ABC):
     # Transzformálás utáni eredmény dekódolása az eredeti táblára
     @abstractmethod
     def decision_decoder(self, inner_result : tuple[int, ...], tran : int) -> tuple[int, ...]: ...
+
+    @abstractmethod
+    def if_valid_move(self, move : tuple[int, ...]) -> bool: ...
+
+    @abstractmethod
+    def get_possible_moves(self) -> tuple[tuple[int, ...], ...]: ...

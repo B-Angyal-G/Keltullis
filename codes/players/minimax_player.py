@@ -10,14 +10,14 @@ from utils.sign import Sign
 
 
 class minimax_player(abstract_player):
-    def get_step(self, game : abstract_game) -> tuple[int]:
-        DEPTH : int = 12
+    def get_move(self, game : abstract_game) -> tuple[int]:
+        DEPTH = 12
         return self.minimax(game, DEPTH)[0]
 
 
-    def minimax(self, game : abstract_game, DEPTH : int) -> tuple[tuple[int], float]:  # [step, value]
+    def minimax(self, game : abstract_game, DEPTH : int) -> tuple[tuple[int], float]:  # [move, value]
         # Van-e nyerő lépés
-        FORCE_WIN : tuple[int] = game.get_force_win()
+        FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
             if game.sign == Sign.CIRCLE:
                 return FORCE_WIN, 1
@@ -25,36 +25,40 @@ class minimax_player(abstract_player):
                 return FORCE_WIN, -1
 
         while DEPTH != 0:
-            # Megvizsgálandó ágak felvétele -> possible_steps
-            # 0-val lesz inicializálva
-            possible_steps : dict[tuple[int], float] = dict()
+            # Megvizsgálandó ágak felvétele -> possible_moves
+            # {lépés : érték} párok, 0-val inicializálva
+            # TODO: FORBIDDEN_POS HASZNÁLATA
+            possible_moves : dict[tuple[int], float] = dict()
 
-            for position in range(game.size):
-                if game.board[position] == 1:
-                    possible_steps[(position, )] = 0
+            transformed_game, tran = game.decision_preparation()
+            inner_possible_moves = transformed_game.get_possible_moves()
+
+            for inner_move in inner_possible_moves:
+                decoded_move = game.decision_decoder(inner_move, tran)
+                possible_moves[decoded_move] = 0
 
             # Lehetséges lépésekhez értékek hozzárendelése
-            for step in possible_steps:
-                child_value = self.minimax(game.make_step(step), DEPTH - 1)[1]
-                possible_steps[step] = child_value
+            for move in possible_moves:
+                child_value = self.minimax(game.make_move(move), DEPTH - 1)[1]
+                possible_moves[move] = child_value
                 
 
             # Minimax választás
             if game.sign == Sign.CIRCLE:
-                val = max(possible_steps.values())
-                for k, v in possible_steps.items():
+                val = max(possible_moves.values())
+                for k, v in possible_moves.items():
                     if v == val:
-                        step = k
+                        move = k
                         break
-                return step, val
+                return move, val
 
             elif game.sign == Sign.CROSS:
-                val = min(possible_steps.values())
-                for k, v in possible_steps.items():
+                val = min(possible_moves.values())
+                for k, v in possible_moves.items():
                     if v == val:
-                        step = k
+                        move = k
                         break
-                return step, val
+                return move, val
 
         # Elértünk az előre kijelölt számítási mélységet
         # véletlenszerű értékkel visszatérünk
