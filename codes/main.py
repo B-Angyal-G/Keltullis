@@ -47,6 +47,6 @@ if __name__ == "__main__":
 
         game = infinite_tictactoe()
 
-        game_master = game_master(player_homo_sapiens, player_minimax_alphabeta, game)
+        GM = game_master(player_homo_sapiens, player_minimax_alphabeta, game)
 
-        game_master.play()
+        GM.play()

@@ -16,7 +16,7 @@ from displays.infinite_tictactoe_game_display import infinite_tictactoe_display
 class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
     size = 9
 
-    def make_move(self, position : tuple[int]) -> "infinite_tictactoe":
+    def make_move(self, position : tuple[int]) -> "infinite_tictactoe":     # type: ignore[override]
         next_game = infinite_tictactoe( sign = self.next_player() )
         next_game.board = c.copy(self.board)
 
@@ -225,15 +225,17 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
                         return 3
                     return 6
 
+        return -1
 
-    def if_valid_move(self, move : tuple[int]) -> bool:
+
+    def if_valid_move(self, move : tuple[int]) -> bool:     # type: ignore[override]
         if self.board[move[0]] <= 1:
             return True
         return False
 
 
     def get_possible_moves(self) -> tuple[tuple[int], ...]:
-        valid_moves : list(tuple(int)) = list()
+        valid_moves : list[tuple[int]] = []
 
         for i in range(self.size):
             if self.board[i] == 1:
@@ -243,9 +245,12 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
     
     # Tábla forgatása egységes állásra, transzformáció visszaadása is
-    def transform_board(self) -> tuple[NDArray[int], int]:
+    def transform_board(self) -> tuple[NDArray[np.int32], int]:
         tmp_board = c.copy(self.board)
         t = self.find_transformation()
+
+        if t == -1:
+            raise ValueError("Cannot find the proper transformation!")
 
         return np.dot(tmp_board, transformations[t]), t
 
@@ -291,6 +296,6 @@ class infinite_tictactoe(abstract_game, infinite_tictactoe_display):
 
 
 
-    def decision_decoder(self, inner_result : tuple[int], tran : int) -> tuple[int]:
+    def decision_decoder(self, inner_result : tuple[int], tran : int) -> tuple[int]:    # type: ignore[override]
         # result[0]-nak megfelelő oszlopban levő 1-es helye
-        return ( np.argmax(transformations[tran][:, inner_result[0]:inner_result[0] + 1]), )
+        return ( int( np.argmax(transformations[tran][:, inner_result[0]:inner_result[0] + 1]) ), )

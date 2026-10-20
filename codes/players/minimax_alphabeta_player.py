@@ -9,11 +9,11 @@ from utils.sign import Sign
 
 
 class minimax_alphabeta_player(abstract_player):
-    def get_move(self, game : abstract_game) -> tuple[int]:
+    def get_move(self, game : abstract_game) -> tuple[int, ...]:
         # game.print_board()
         DEPTH = 12
-        alpha = -2
-        beta = 2
+        alpha = -2.0
+        beta = 2.0
         
         result = self.minimax_alphabeta(game, alpha, beta, DEPTH)
         # if result[1] == 1 or result[1] == -1:
@@ -22,27 +22,27 @@ class minimax_alphabeta_player(abstract_player):
             
         return result[0]
 
-    def minimax_alphabeta(self, game : abstract_game, alpha : int, beta : int, DEPTH : int) -> tuple[tuple[int], float]:  # [move, value]
+    def minimax_alphabeta(self, game : abstract_game, alpha : float, beta : float, DEPTH : int) -> tuple[tuple[int, ...], float]:  # [move, value]
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
             if game.sign == Sign.CIRCLE:
-                return FORCE_WIN, 1
+                return FORCE_WIN, 1.0
             elif game.sign == Sign.CROSS:
-                return FORCE_WIN, -1
+                return FORCE_WIN, -1.0
 
         while DEPTH != 0:
             # Megvizsgálandó ágak felvétele -> possible_moves
             # {lépés : érték} párok, 0-val inicializálva
             # TODO: FORBIDDEN_POS HASZNÁLATA
-            possible_moves : dict[tuple[int], float] = dict()
+            possible_moves : dict[tuple[int, ...], float] = dict()
 
             transformed_game, tran = game.decision_preparation()
             inner_possible_moves = transformed_game.get_possible_moves()
 
             for inner_move in inner_possible_moves:
                 decoded_move = game.decision_decoder(inner_move, tran)
-                possible_moves[decoded_move] = 0
+                possible_moves[decoded_move] = 0.0
 
             # Lehetséges lépésekhez értékek hozzárendelése
             for move in possible_moves:

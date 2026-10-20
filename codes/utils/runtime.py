@@ -1,12 +1,23 @@
 import time
-from typing import Callable, Any
+from collections.abc import Callable
+from typing import Any, TypeVar
 
-def runtime(func: Callable[..., Any], *args, **kwargs) -> tuple[tuple[int, ...], float]:
+Arg = TypeVar("Arg")
+
+
+def runtime(func: Callable[..., Arg], *args: Any, **kwargs: Any) -> tuple[Arg, float]:
     start = time.perf_counter()
     result = func(*args, **kwargs)
     elapsed = time.perf_counter() - start
 
-    class_name = type(func.__self__).__name__
-    print(f"{class_name}.{func.__name__}: {elapsed:.6f}s")
-    
+    # Ha kötött metódus, kiolvassuk az osztály nevét, egyébként üres marad:
+    instance = getattr(func, "__self__", None)
+    if instance is not None:
+        prefix = f"{type(instance).__name__}."
+    else:
+        prefix = ""
+
+    func_name = getattr(func, "__name__", str(func))
+    print(f"{prefix}{func_name}: {elapsed:.6f}s")
+
     return result, elapsed

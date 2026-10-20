@@ -8,7 +8,7 @@ from games.abstract_game import abstract_game
 
 
 class homo_sapiens_player(abstract_player):
-    def get_move(self, game : abstract_game) -> int:
+    def get_move(self, game : abstract_game) -> tuple[int]:
         game.print4play()
 
         # Beolvasandó értékek határai

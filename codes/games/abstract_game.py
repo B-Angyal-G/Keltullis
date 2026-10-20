@@ -33,7 +33,7 @@ class abstract_game(abstract_game_display, ABC):
     # String-ből állás dekódolása
     @classmethod
     @abstractmethod
-    def str2board(str_board : str) -> "abstract_game": ...
+    def str2board(cls, str_board : str) -> "abstract_game": ...
 
     # Győztes meghatározása
     # -1 : nincs győztes

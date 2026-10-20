@@ -10,32 +10,32 @@ from utils.sign import Sign
 
 
 class minimax_player(abstract_player):
-    def get_move(self, game : abstract_game) -> tuple[int]:
+    def get_move(self, game : abstract_game) -> tuple[int, ...]:
         DEPTH = 12
         return self.minimax(game, DEPTH)[0]
 
 
-    def minimax(self, game : abstract_game, DEPTH : int) -> tuple[tuple[int], float]:  # [move, value]
+    def minimax(self, game : abstract_game, DEPTH : int) -> tuple[tuple[int, ...], float]:  # [move, value]
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
             if game.sign == Sign.CIRCLE:
-                return FORCE_WIN, 1
+                return FORCE_WIN, 1.0
             elif game.sign == Sign.CROSS:
-                return FORCE_WIN, -1
+                return FORCE_WIN, -1.0
 
         while DEPTH != 0:
             # Megvizsgálandó ágak felvétele -> possible_moves
             # {lépés : érték} párok, 0-val inicializálva
             # TODO: FORBIDDEN_POS HASZNÁLATA
-            possible_moves : dict[tuple[int], float] = dict()
+            possible_moves : dict[tuple[int, ...], float] = dict()
 
             transformed_game, tran = game.decision_preparation()
             inner_possible_moves = transformed_game.get_possible_moves()
 
             for inner_move in inner_possible_moves:
                 decoded_move = game.decision_decoder(inner_move, tran)
-                possible_moves[decoded_move] = 0
+                possible_moves[decoded_move] = 0.0
 
             # Lehetséges lépésekhez értékek hozzárendelése
             for move in possible_moves:
