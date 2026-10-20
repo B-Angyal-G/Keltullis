@@ -9,11 +9,11 @@ from utils.sign import Sign
 
 
 class minimax_alphabeta_player(abstract_player):
-    def get_step(self, game : abstract_game) -> tuple[int]:
+    def get_move(self, game : abstract_game) -> tuple[int]:
         # game.print_board()
-        DEPTH: int = 12
-        alpha: int = -2
-        beta: int = 2
+        DEPTH = 12
+        alpha = -2
+        beta = 2
         
         result = self.minimax_alphabeta(game, alpha, beta, DEPTH)
         # if result[1] == 1 or result[1] == -1:
@@ -22,7 +22,7 @@ class minimax_alphabeta_player(abstract_player):
             
         return result[0]
 
-    def minimax_alphabeta(self, game : abstract_game, alpha : int, beta : int, DEPTH : int) -> tuple[tuple[int], float]:  # [step, value]
+    def minimax_alphabeta(self, game : abstract_game, alpha : int, beta : int, DEPTH : int) -> tuple[tuple[int], float]:  # [move, value]
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
@@ -32,19 +32,22 @@ class minimax_alphabeta_player(abstract_player):
                 return FORCE_WIN, -1
 
         while DEPTH != 0:
-            # Megvizsgálandó ágak felvétele -> possible_steps
-            # 0-val lesz inicializálva
-            possible_steps : dict[tuple[int], float] = dict()
+            # Megvizsgálandó ágak felvétele -> possible_moves
+            # {lépés : érték} párok, 0-val inicializálva
+            # TODO: FORBIDDEN_POS HASZNÁLATA
+            possible_moves : dict[tuple[int], float] = dict()
 
-            for position in range(game.size):
-                if game.board[position] == 1:
-                    possible_steps[(position, )] = 0
+            transformed_game, tran = game.decision_preparation()
+            inner_possible_moves = transformed_game.get_possible_moves()
+
+            for inner_move in inner_possible_moves:
+                decoded_move = game.decision_decoder(inner_move, tran)
+                possible_moves[decoded_move] = 0
 
             # Lehetséges lépésekhez értékek hozzárendelése
-            # TODO: FORBIDDEN_POS HASZNÁLATA
-            for step in possible_steps:
-                child_value = self.minimax_alphabeta(game.make_step(step), alpha, beta, DEPTH - 1)[1]
-                possible_steps[step] = child_value
+            for move in possible_moves:
+                child_value = self.minimax_alphabeta(game.make_move(move), alpha, beta, DEPTH - 1)[1]
+                possible_moves[move] = child_value
 
                 # Alpha - Beta vágás
                 if game.sign == Sign.CIRCLE:
@@ -60,21 +63,22 @@ class minimax_alphabeta_player(abstract_player):
 
             # Minimax választás
             if game.sign == Sign.CIRCLE:
-                val = max(possible_steps.values())
-                for k, v in possible_steps.items():
+                val = max(possible_moves.values())
+                for k, v in possible_moves.items():
                     if v == val:
-                        step = k
+                        move = k
                         break
-                return step, val
+                return move, val
 
             elif game.sign == Sign.CROSS:
-                val = min(possible_steps.values())
-                for k, v in possible_steps.items():
+                val = min(possible_moves.values())
+                for k, v in possible_moves.items():
                     if v == val:
-                        step = k
+                        move = k
                         break
-                return step, val
+                return move, val
 
         # Elértünk az előre kijelölt számítási mélységet
         # véletlenszerű értékkel visszatérünk
+        # TODO: MCTS, Q-Learning
         return ((-1, ), r.uniform(-0.9, 0.9))

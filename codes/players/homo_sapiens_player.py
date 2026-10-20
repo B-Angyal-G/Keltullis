@@ -8,11 +8,11 @@ from games.abstract_game import abstract_game
 
 
 class homo_sapiens_player(abstract_player):
-    def get_step(self, game : abstract_game) -> int:
+    def get_move(self, game : abstract_game) -> int:
         game.print4play()
 
         # Beolvasandó értékek határai
-        sq_size : int = int(m.sqrt(game.size))
+        sq_size = int(m.sqrt(game.size))
         valid_set : set[int] = set(i for i in range(1, sq_size + 1))
         
 
@@ -26,9 +26,12 @@ class homo_sapiens_player(abstract_player):
 
 
             if row in valid_set and col in valid_set:
-                step = 3 * (row - 1) + (col - 1)
-                VALID = 1
+                move = ( 3 * (row - 1) + (col - 1), )
+                if game.if_valid_move(move):
+                    VALID = 1
+                else:
+                    print("\nInvalid move!")    
             else:
                 print("\nInvalid input!")
 
-        return (step, )
+        return move
