@@ -4,7 +4,7 @@ import random as r
 from players.abstract_player import abstract_player
 from games.abstract_game import abstract_game
 
-from utils.sign import Sign
+from utils.side import Side
 
 
 
@@ -26,9 +26,9 @@ class minimax_alphabeta_player(abstract_player):
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
-            if game.sign == Sign.CIRCLE:
+            if game.side == Side.FIRST:
                 return FORCE_WIN, 1.0
-            elif game.sign == Sign.CROSS:
+            elif game.side == Side.SECOND:
                 return FORCE_WIN, -1.0
 
         while DEPTH != 0:
@@ -50,19 +50,19 @@ class minimax_alphabeta_player(abstract_player):
                 possible_moves[move] = child_value
 
                 # Alpha - Beta vágás
-                if game.sign == Sign.CIRCLE:
+                if game.side == Side.FIRST:
                     alpha = max(alpha, child_value)
                     if beta <= alpha:
                         break
                         
-                elif game.sign == Sign.CROSS:
+                elif game.side == Side.SECOND:
                     beta = min(beta, child_value)
                     if alpha >= beta:
                         break
 
 
             # Minimax választás
-            if game.sign == Sign.CIRCLE:
+            if game.side == Side.FIRST:
                 val = max(possible_moves.values())
                 for k, v in possible_moves.items():
                     if v == val:
@@ -70,7 +70,7 @@ class minimax_alphabeta_player(abstract_player):
                         break
                 return move, val
 
-            elif game.sign == Sign.CROSS:
+            elif game.side == Side.SECOND:
                 val = min(possible_moves.values())
                 for k, v in possible_moves.items():
                     if v == val:

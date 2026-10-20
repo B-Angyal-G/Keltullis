@@ -1,12 +1,12 @@
 import math as m
 
-from displays.abstract_game_display import abstract_game_display
+from games.abstract_game_display import abstract_game_display
 
 
 
 
 class infinite_tictactoe_display(abstract_game_display):
-    def print_signs(self) -> None:
+    def print_tokens(self) -> None:
         s = "Board:\n"
         sq = int(m.sqrt(self.size))
         for row in self.board.reshape((sq, sq)):
@@ -19,7 +19,7 @@ class infinite_tictactoe_display(abstract_game_display):
                     s = s + "." + " "
             s += "\n"
 
-        s = s + "Sign: " + str(self.sign.value)
+        s = s + "Side: " + str(self.side.value)
         print(s)
 
 

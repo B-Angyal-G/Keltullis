@@ -4,14 +4,14 @@ import numpy as np
 from abc import ABC, abstractmethod
 from numpy.typing import NDArray
 
-from utils.sign import Sign
+from utils.side import Side
 
 
 
 
 class abstract_game_display(ABC):
     size : int
-    sign : Sign
+    side : Side
     board : NDArray[np.int32]
 
     def __str__(self) -> str:
@@ -22,7 +22,7 @@ class abstract_game_display(ABC):
                 s = s + str(element) + " "
             s += "\n"
 
-        s = s + "Sign: " + str(self.sign.value)
+        s = s + "Side: " + str(self.side.value)
 
         return s
 
@@ -38,7 +38,7 @@ class abstract_game_display(ABC):
 
 
     @abstractmethod
-    def print_signs(self) -> None: ...
+    def print_tokens(self) -> None: ...
 
     @abstractmethod
     def print4play(self) -> None: ...

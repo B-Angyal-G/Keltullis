@@ -1,6 +1,6 @@
 # GAMES
 from games.game_master import game_master
-from games.infinite_tictactoe_game import infinite_tictactoe
+from games.infinite_tictactoe.infinite_tictactoe_game import infinite_tictactoe
 
 # PLAYERS
 from players.homo_sapiens_player import homo_sapiens_player
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
 
         print('String-ből beolvasott állás:')
-        game.print_signs()
+        game.print_tokens()
         print()
 
         move = runtime(player_minimax.get_move, game)[0]

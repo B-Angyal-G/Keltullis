@@ -1,7 +1,7 @@
 from players.abstract_player import abstract_player
 from games.abstract_game import abstract_game
 
-from utils.sign import Sign
+from utils.side import Side
 
 
 
@@ -17,12 +17,12 @@ class game_master:
             # Lépés meghatározása
             move = current_player.get_move(self.game)
 
-            # Lépés megtétele -> Sign lép
+            # Lépés megtétele -> Side lép
             self.game = self.game.make_move(move)
 
             # Következő játékos
-            current_player = self.players[ self.game.sign.value ]
+            current_player = self.players[ self.game.side.value ]
 
 
         self.game.print4play()
-        print(f"Nyertes: { Sign( self.game.get_winner() ).name }!")
+        print(f"Nyertes: { Side( self.game.get_winner() ).name }!")
