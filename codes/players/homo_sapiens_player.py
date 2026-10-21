@@ -1,13 +1,17 @@
 import numpy as np
 import math as m
 
-from players.abstract_player import abstract_player
 from games.abstract_game import abstract_game
+from players.abstract_player import abstract_player
 
 
 
 
 class homo_sapiens_player(abstract_player):
+    def load_values(self, game : abstract_game) -> None:
+        pass
+
+
     def get_move(self, game : abstract_game) -> tuple[int]:
         game.print4play()
 

@@ -11,7 +11,10 @@ class game_master:
         self.game = game
 
     def play(self) -> None:
-        current_player : abstract_player = self.players[0]
+        self.players[0].load_values(self.game)
+        self.players[1].load_values(self.game)
+
+        current_player = self.players[0]
 
         while self.game.get_winner() == -1:
             # Lépés meghatározása
