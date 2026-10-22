@@ -1,3 +1,5 @@
+import copy as c
+
 from pathlib import Path
 
 from players.abstract_player import abstract_player
@@ -40,25 +42,26 @@ class ai_trainer:
         self.players[1].init_data(self.experience_data)
 
         current_player = self.players[0]
+        inner_game = c.deepcopy(self.game)
 
         current_board_str : str
         history : list[str] = []
 
-        while self.game.get_winner() == -1:
+        while inner_game.get_winner() == -1:
             # Lépés meghatározása
-            move = current_player.get_move(self.game)
+            move = current_player.get_move(inner_game)
 
             # Lépés megtétele -> Side léptetése is
-            self.game = self.game.make_move(move)
+            inner_game = inner_game.make_move(move)
 
             # Állás elmentése
-            current_board_str = self.game.board2str()
+            current_board_str = inner_game.board2str()
             history.append( current_board_str )
 
             # Következő játékos
-            current_player = self.players[ self.game.side.value ]
+            current_player = self.players[ inner_game.side.value ]
 
-        return history, self.game.get_winner()
+        return history, inner_game.get_winner()
 
 
 
