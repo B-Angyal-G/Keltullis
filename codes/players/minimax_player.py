@@ -11,14 +11,10 @@ from utils.side import Side
 
 
 class minimax_player(abstract_player):
-    def load_values(self, game : abstract_game) -> None:
-        pass
-
-
-
     def get_move(self, game : abstract_game) -> tuple[int, ...]:
         DEPTH = 12
         return self.minimax(game, DEPTH, self.minimax_random_eval, max, min)[0]
+
 
 
     def minimax(self, game : abstract_game, DEPTH : int,
@@ -76,3 +72,8 @@ class minimax_player(abstract_player):
 
     def minimax_random_eval(self, game : abstract_game) -> float:
         return r.uniform(-0.9, 0.9)
+
+
+    
+    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
+        pass

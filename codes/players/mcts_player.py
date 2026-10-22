@@ -15,6 +15,7 @@ from utils.side import Side
 class mcts_player(abstract_player):
     # def minimax_alphabeta(self, game : abstract_game, alpha : float, beta : float, DEPTH : int,
     #                       eval_func : Callable[[abstract_game], float], max_choose : Callable[[Iterable[float]], float], min_choose : Callable[[Iterable[float]], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
+    
     def __init__(self) -> None:
         #                 game_string        move              total  win (simulation)
         self.data_map : dict[ str, tuple[tuple[int, ...], tuple[int, float]] ] = {}
@@ -45,5 +46,12 @@ class mcts_player(abstract_player):
         return result[0]
 
 
+
+    # TODO
     def mcts_eval(self, game : abstract_game) -> float:
+        pass
+
+
+
+    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
         pass

@@ -2,7 +2,6 @@ import numpy as np
 
 from numpy.typing import NDArray
 
-
 from games.infinite_tictactoe.infinite_tictactoe_basic import infinite_tictactoe_basic
 from games.infinite_tictactoe.infinite_tictactoe_io import infinite_tictactoe_io
 from games.infinite_tictactoe.infinite_tictactoe_transformations import infinite_tictactoe_transformations

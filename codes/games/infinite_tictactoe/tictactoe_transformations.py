@@ -5,7 +5,6 @@ import copy as c
 
 
 # <--- Transzformációs mátrixok --->
-
 # Forgatás
 rot = np.zeros((9,9), dtype='int32')
 rot[0][6] = 1

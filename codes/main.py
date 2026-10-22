@@ -1,5 +1,6 @@
 # GAMES
 from games.game_master import game_master
+from games.ai_trainer import ai_trainer
 from games.infinite_tictactoe.infinite_tictactoe_game import infinite_tictactoe
 
 # PLAYERS
@@ -13,8 +14,9 @@ from utils.runtime import runtime
 
 
 if __name__ == "__main__":
-    PELDA = 1
-    GAME  = 1
+    PELDA = 0
+    GAME  = 0
+    TRAIN = 1
 
     if PELDA == 1:
         print("Minimax és Minimax alpha-beta vágás algoritmusok összehasonlítása:")
@@ -39,6 +41,7 @@ if __name__ == "__main__":
         print("\n\n")
 
 
+
     if GAME == 1:
         # Inicializálások
         player_minimax           = minimax_player()
@@ -50,3 +53,12 @@ if __name__ == "__main__":
         GM = game_master(player_homo_sapiens, player_minimax_alphabeta, game)
 
         GM.play()
+
+
+
+    if TRAIN == 1:
+        player_minimax_alphabeta = minimax_alphabeta_player()
+        game = infinite_tictactoe()
+
+        trainer = ai_trainer(player_minimax_alphabeta, player_minimax_alphabeta, game)
+        trainer.train()

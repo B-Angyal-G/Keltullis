@@ -29,7 +29,7 @@ class infinite_tictactoe_io(abstract_game):
 
     @classmethod
     def str2board(cls, str_board : str) -> Self:
-        read_game = cls(side=int(str_board[-1]))
+        read_game = cls( side = int(str_board[-1]) )
         s = 0
         for i in range(read_game.size):
             if str_board[s] in {'2', '4', '8'}:

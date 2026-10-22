@@ -10,7 +10,6 @@ from utils.side import Side
 
 
 
-
 def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH : int,
                       eval_func : Callable[[abstract_game], float], max_choose : Callable[[Iterable[float]], float], min_choose : Callable[[Iterable[float]], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
     # Van-e nyerő lépés
@@ -76,11 +75,6 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
 
 
 class minimax_alphabeta_player(abstract_player):
-    def load_values(self, game : abstract_game) -> None:
-        pass
-
-
-
     def get_move(self, game : abstract_game) -> tuple[int, ...]:
         # game.print_board()
         DEPTH = 12
@@ -95,5 +89,11 @@ class minimax_alphabeta_player(abstract_player):
         return result[0]
 
 
+
     def minimax_random_eval(self, game : abstract_game) -> float:
         return r.uniform(-0.9, 0.9)
+
+
+    
+    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
+        pass

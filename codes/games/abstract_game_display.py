@@ -14,6 +14,7 @@ class abstract_game_display(ABC):
     side : Side
     board : NDArray[np.int32]
 
+
     def __str__(self) -> str:
         s = "Board:\n"
         sq = int(m.sqrt(self.size))
@@ -25,6 +26,7 @@ class abstract_game_display(ABC):
         s = s + "Side: " + str(self.side.value)
 
         return s
+
 
 
     def print_board(self) -> None:

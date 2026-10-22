@@ -5,14 +5,16 @@ from utils.side import Side
 
 
 
+
 class game_master:
     def __init__(self, player1 : abstract_player, player2 : abstract_player, game : abstract_game) -> None:
         self.players = player1, player2
         self.game = game
 
+
     def play(self) -> None:
-        self.players[0].load_values(self.game)
-        self.players[1].load_values(self.game)
+        self.players[0].init_data(self.game)
+        self.players[1].init_data(self.game)
 
         current_player = self.players[0]
 

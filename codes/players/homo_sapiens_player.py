@@ -8,10 +8,6 @@ from players.abstract_player import abstract_player
 
 
 class homo_sapiens_player(abstract_player):
-    def load_values(self, game : abstract_game) -> None:
-        pass
-
-
     def get_move(self, game : abstract_game) -> tuple[int]:
         game.print4play()
 
@@ -39,3 +35,8 @@ class homo_sapiens_player(abstract_player):
                 print("\nInvalid input!")
 
         return move
+
+
+
+    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
+        pass

@@ -11,3 +11,8 @@ class random_player(abstract_player):
     def get_move(self, game : abstract_game) -> tuple[int]:
         valid_positions = np.argwhere(game.board == 1)
         return (valid_positions[np.random.randint(len(valid_positions))][0], )
+
+
+
+    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
+        pass
