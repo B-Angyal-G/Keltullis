@@ -20,8 +20,6 @@ class abstract_game(abstract_game_display, ABC):
         self.board = np.ones(self.size, dtype='int32')
         self.side = Side(side)
 
-    def next_player(self) -> Side:
-        return Side((self.side.value + 1) % 2)
 
 
     # <-- LÉPÉSEK -->
@@ -35,7 +33,7 @@ class abstract_game(abstract_game_display, ABC):
     # Győztes meghatározása
     # -1 : nincs győztes
     @abstractmethod
-    def get_winner(self) -> int: ...
+    def get_winner(self) -> Side: ...
 
     # Győztes lépés meghatározása
     # Ha nincs, akkor -> return[0]-nak -1 -nek kell lennie!
@@ -45,6 +43,8 @@ class abstract_game(abstract_game_display, ABC):
     @abstractmethod
     def get_possible_moves(self) -> tuple[tuple[int, ...], ...]: ...
 
+    @abstractmethod
+    def get_possible_last_positions(self) -> tuple[str, ...]: ...
 
 
     # <-- JÁTÉK ELMENTÉSE/STRINGÉ ALAKÍTÁSA -->

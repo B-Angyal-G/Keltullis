@@ -1,12 +1,14 @@
 # GAMES
 from games.game_master import game_master
-from games.ai_trainer import ai_trainer
+from games.mcts_trainer import mcts_trainer
 from games.infinite_tictactoe.infinite_tictactoe_game import infinite_tictactoe
 
 # PLAYERS
 from players.homo_sapiens_player import homo_sapiens_player
 from players.minimax_player import minimax_player
 from players.minimax_alphabeta_player import minimax_alphabeta_player
+from players.mcts_player import mcts_player
+from players.mcts_simple_player import mcts_simple_player
 from players.random_player import random_player
 
 from utils.runtime import runtime
@@ -57,8 +59,8 @@ if __name__ == "__main__":
 
 
     if TRAIN == 1:
-        player_minimax_alphabeta = minimax_alphabeta_player()
+        player_mcts = mcts_simple_player()
         game = infinite_tictactoe()
 
-        trainer = ai_trainer(player_minimax_alphabeta, player_minimax_alphabeta, game)
-        trainer.train()
+        trainer = mcts_trainer(player_mcts, player_mcts, game)
+        trainer.train(100000)

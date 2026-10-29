@@ -31,7 +31,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
 
         for inner_move in inner_possible_moves:
             decoded_move = game.decision_decoder(inner_move, tran)
-            possible_moves[decoded_move] = 0.0
+            possible_moves[decoded_move] = 0.5
 
         # Lehetséges lépésekhez értékek hozzárendelése
         for move in possible_moves:
@@ -52,7 +52,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
 
         # Minimax választás
         if game.side == Side.FIRST:
-            val = max_choose(possible_moves.values())
+            val = max_choose( tuple(possible_moves.values()) )
             for k, v in possible_moves.items():
                 if v == val:
                     move = k
@@ -60,7 +60,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
             return move, val
 
         elif game.side == Side.SECOND:
-            val = min_choose(possible_moves.values())
+            val = min_choose( tuple(possible_moves.values()) )
             for k, v in possible_moves.items():
                 if v == val:
                     move = k
