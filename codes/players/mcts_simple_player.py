@@ -14,7 +14,7 @@ from players.abstract_player import abstract_player
 class mcts_simple_player(abstract_player):
     def __init__(self) -> None:
         #                 game_string   total  win (simulation)
-        self.data_map : dict[ str, tuple[int, float] ] = {}
+        self.data_map : dict[ str, tuple[int, int] ] = {}
 
 
     def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
@@ -48,15 +48,19 @@ class mcts_simple_player(abstract_player):
 
 
     def mcts_eval(self, game : abstract_game) -> float:
-        game_board_str = game.board2str
+        game_board_str = game.board2str()
 
         if game_board_str in self.data_map:
             # Adott csomópont látogatottsága és győzelmei
             n, w = self.data_map[game_board_str]
 
             # Az adott csomópont (összes lehetséges) szülője látogatottsága
+            # TODO: get_possible_last_positions() egyeztetése az egységes táblaformátummal
             possible_last_positions = game.get_possible_last_positions()
-            N = sum( self.data_map[pos][0] for pos in possible_last_positions )
+            N = sum( self.data_map[pos][0] for pos in possible_last_positions if pos in self.data_map )
+            # Tűzoltás
+            if N == 0:
+                N = 1
 
             # MCTS értékelése c = sqrt(2) választással
             mcts_val = w/n + m.sqrt( 2 * m.log(N) / n )

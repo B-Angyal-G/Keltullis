@@ -13,9 +13,7 @@ class game_master:
 
 
     def play(self) -> None:
-        self.players[0].init_data(self.game)
-        self.players[1].init_data(self.game)
-
+        # TODO: LOAD_DATA
         current_player = self.players[0]
 
         while self.game.get_winner() == -1:

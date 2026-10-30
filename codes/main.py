@@ -1,6 +1,5 @@
 # GAMES
 from games.game_master import game_master
-from games.mcts_trainer import mcts_trainer
 from games.infinite_tictactoe.infinite_tictactoe_game import infinite_tictactoe
 
 # PLAYERS
@@ -11,6 +10,10 @@ from players.mcts_player import mcts_player
 from players.mcts_simple_player import mcts_simple_player
 from players.random_player import random_player
 
+# TRAINERS
+from trainers.mcts_trainer import mcts_trainer
+
+# UTILS
 from utils.runtime import runtime
 
 
@@ -62,5 +65,5 @@ if __name__ == "__main__":
         player_mcts = mcts_simple_player()
         game = infinite_tictactoe()
 
-        trainer = mcts_trainer(player_mcts, player_mcts, game)
+        trainer = mcts_trainer(player_mcts, game)
         trainer.train(100000)
