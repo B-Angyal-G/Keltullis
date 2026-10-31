@@ -66,4 +66,4 @@ if __name__ == "__main__":
         game = infinite_tictactoe()
 
         trainer = mcts_trainer(player_mcts, game)
-        trainer.train(100000)
+        trainer.train(1000)

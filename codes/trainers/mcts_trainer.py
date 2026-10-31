@@ -21,8 +21,6 @@ class mcts_trainer(abstract_trainer):
                 for line in f:
                     board_str = line[:-1]
                     xp = [ int(i) for i in f.readline().split(",") ]
-                    print(xp)
-                    print(type(xp))
                     read_data[board_str] = xp
 
             return read_data
@@ -47,7 +45,9 @@ class mcts_trainer(abstract_trainer):
             simulation_game = simulation_game.make_move(move)
 
             # Állás elmentése
-            current_board_str = simulation_game.board2str()
+            transformed_game = simulation_game.decision_preparation()[0]
+            current_board_str = transformed_game.board2str()
+
             history.append( current_board_str )
 
         return history, simulation_game.get_winner()
@@ -56,7 +56,7 @@ class mcts_trainer(abstract_trainer):
 
     def train(self, iteration : int = 1000) -> None:
         for i in range(1, iteration + 1):
-            if i % 1000 == 0:
+            if i % (iteration // 10) == 0:
                 print(i)
 
             history, winner = self.simulation()

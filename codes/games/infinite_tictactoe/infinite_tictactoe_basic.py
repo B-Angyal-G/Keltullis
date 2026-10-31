@@ -170,7 +170,8 @@ class infinite_tictactoe_basic(abstract_game):
             for i in range(self.size):
                 if tmp_game.board[i] == 1 and i != last_move:
                     tmp_game.board[i] = 8
-                    possible_last_positions.append(tmp_game.board2str())
+                    tmp_game_transformed = tmp_game.decision_preparation()[0]
+                    possible_last_positions.append(tmp_game_transformed.board2str())
                     tmp_game.board[i] = 1
 
         if previous_side == Side.SECOND:
@@ -184,7 +185,8 @@ class infinite_tictactoe_basic(abstract_game):
             for i in range(self.size):
                 if tmp_game.board[i] == 1 and i != last_move:
                     tmp_game.board[i] = 64
-                    possible_last_positions.append(tmp_game.board2str())
+                    tmp_game_transformed = tmp_game.decision_preparation()[0]
+                    possible_last_positions.append(tmp_game_transformed.board2str())
                     tmp_game.board[i] = 1
 
         return tuple( possible_last_positions )
