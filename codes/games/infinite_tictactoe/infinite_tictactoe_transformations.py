@@ -5,7 +5,7 @@ from numpy.typing import NDArray
 from typing import Self
 
 from games.abstract_game import abstract_game
-from games.infinite_tictactoe.tictactoe_transformations import transformations
+from games.infinite_tictactoe.infinite_tictactoe_transformations_matrices import transformations
 from utils.side import Side
 
 
