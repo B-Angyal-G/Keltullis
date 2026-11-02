@@ -38,8 +38,8 @@ class mcts_simple_player(abstract_player):
         mcts_values = []
         for inner_move in inner_possible_moves:
             possible_moves.append( game.decision_decoder(inner_move, tran) )
-            test_val = self.mcts_eval( game.make_move(possible_moves[-1]),  current_game_transformed_str)
-            mcts_values.append( test_val ) 
+            mcts_val = self.mcts_eval( game.make_move(possible_moves[-1]),  current_game_transformed_str)
+            mcts_values.append( mcts_val ) 
 
         # Súlyozott választás
         if set(mcts_values) == {0}:
