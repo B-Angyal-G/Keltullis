@@ -11,7 +11,7 @@ from utils.side import Side
 
 
 def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH : int,
-                      eval_func : Callable[[abstract_game], float], max_choose : Callable[[Iterable[float]], float], min_choose : Callable[[Iterable[float]], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
+                      eval_func : Callable[[abstract_game], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
     # Van-e nyerő lépés
     FORCE_WIN = game.get_force_win()
     if FORCE_WIN[0] != -1:
@@ -35,7 +35,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
 
         # Lehetséges lépésekhez értékek hozzárendelése
         for move in possible_moves:
-            child_value = minimax_alphabeta(game.make_move(move), alpha, beta, DEPTH - 1, eval_func, max, min)[1]
+            child_value = minimax_alphabeta(game.make_move(move), alpha, beta, DEPTH - 1, eval_func)[1]
             possible_moves[move] = child_value
 
             # Alpha - Beta vágás
@@ -52,7 +52,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
 
         # Minimax választás
         if game.side == Side.FIRST:
-            val = max_choose( tuple(possible_moves.values()) )
+            val = max( tuple(possible_moves.values()) )
             for k, v in possible_moves.items():
                 if v == val:
                     move = k
@@ -60,7 +60,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
             return move, val
 
         elif game.side == Side.SECOND:
-            val = min_choose( tuple(possible_moves.values()) )
+            val = min( tuple(possible_moves.values()) )
             for k, v in possible_moves.items():
                 if v == val:
                     move = k
@@ -68,7 +68,7 @@ def minimax_alphabeta(game : abstract_game, alpha : float, beta : float, DEPTH :
             return move, val
 
     # Elértünk az előre kijelölt számítási mélységet
-    # véletlenszerű értékkel visszatérünk
+    # Megkapott kiértékelőfüggvénynek megfelelő értékkel térünk vissza
     value = eval_func(game)
     return ((-1, ), value)
 
@@ -81,7 +81,7 @@ class minimax_alphabeta_player(abstract_player):
         alpha = -2.0
         beta = 2.0
         
-        result = minimax_alphabeta(game, alpha, beta, DEPTH, self.minimax_random_eval, max, min)
+        result = minimax_alphabeta(game, alpha, beta, DEPTH, self.minimax_random_eval)
         # if result[1] == 1 or result[1] == -1:
         #     # Ha a visszatérési érték +/- 1, akkor egyértelmű nyerést talált.
         #     print('Van nyerő stratégiám!')

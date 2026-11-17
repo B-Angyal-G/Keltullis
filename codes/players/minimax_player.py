@@ -18,7 +18,7 @@ class minimax_player(abstract_player):
 
 
     def minimax(self, game : abstract_game, DEPTH : int,
-                eval_func : Callable[[abstract_game], float], max_choose : Callable[[Iterable[float]], float], min_choose : Callable[[Iterable[float]], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
+                eval_func : Callable[[abstract_game], float]) -> tuple[tuple[int, ...], float]:  # [move, value]
         # Van-e nyerő lépés
         FORCE_WIN = game.get_force_win()
         if FORCE_WIN[0] != -1:
@@ -42,13 +42,13 @@ class minimax_player(abstract_player):
 
             # Lehetséges lépésekhez értékek hozzárendelése
             for move in possible_moves:
-                child_value = self.minimax(game.make_move(move), DEPTH - 1, eval_func, max, min)[1]
+                child_value = self.minimax(game.make_move(move), DEPTH - 1, eval_func)[1]
                 possible_moves[move] = child_value
                 
 
             # Minimax választás
             if game.side == Side.FIRST:
-                val = max_choose(possible_moves.values())
+                val = max( possible_moves.values() )
                 for k, v in possible_moves.items():
                     if v == val:
                         move = k
@@ -56,7 +56,7 @@ class minimax_player(abstract_player):
                 return move, val
 
             elif game.side == Side.SECOND:
-                val = min_choose(possible_moves.values())
+                val = min( possible_moves.values() )
                 for k, v in possible_moves.items():
                     if v == val:
                         move = k
@@ -64,7 +64,7 @@ class minimax_player(abstract_player):
                 return move, val
 
         # Elértünk az előre kijelölt számítási mélységet
-        # véletlenszerű értékkel visszatérünk
+        # Megkapott kiértékelőfüggvénynek megfelelő értékkel térünk vissza
         value = eval_func(game)
         return ((-1, ), value)
 
