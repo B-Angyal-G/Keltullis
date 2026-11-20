@@ -18,7 +18,7 @@ class infinite_tictactoe_basic(abstract_game):
 
     def make_move(self, position : tuple[int]) -> Self:     # type: ignore[override]
         next_game = type(self)( self.side.next_player() )
-        next_game.board = c.copy(self.board)
+        next_game.board = c.deepcopy(self.board)
 
         # Kör: 2, 4, 8
         if self.side == Side.FIRST:
@@ -155,38 +155,38 @@ class infinite_tictactoe_basic(abstract_game):
 
 
     def get_possible_last_positions(self) -> tuple[str, ...]:
-        tmp_game = c.deepcopy(self)
-        previous_side = (self.side + 1) % 2
+        tmp_game = type(self)( self.side.next_player() )
+        tmp_game.board = c.deepcopy(self.board)
         possible_last_positions : list[str] = []
 
-        if previous_side == Side.FIRST:
+        if tmp_game.side == Side.FIRST:
             for i in range(self.size):
                 if tmp_game.board[i] == 2:
-                    tmp_game.board[i] = 1
-                    last_move = i
+                    tmp_game.board[i] = 0
                 elif tmp_game.board[i] == 4 or tmp_game.board[i] == 8:
                     tmp_game.board[i] = int(tmp_game.board[i] / 2)
 
             for i in range(self.size):
-                if tmp_game.board[i] == 1 and i != last_move:
+                if tmp_game.board[i] == 1:
                     tmp_game.board[i] = 8
-                    tmp_game_transformed = tmp_game.decision_preparation()[0]
-                    possible_last_positions.append(tmp_game_transformed.board2str())
+                    if tmp_game.get_winner() == Side.NONE:
+                        tmp_game_transformed = tmp_game.decision_preparation()[0]
+                        possible_last_positions.append(tmp_game_transformed.board2str())
                     tmp_game.board[i] = 1
 
-        if previous_side == Side.SECOND:
+        if tmp_game.side == Side.SECOND:
             for i in range(self.size):
                 if tmp_game.board[i] == 16:
-                    tmp_game.board[i] = 1
-                    last_move = i
+                    tmp_game.board[i] = 0
                 elif tmp_game.board[i] == 32 or tmp_game.board[i] == 64:
                     tmp_game.board[i] = int(tmp_game.board[i] / 2)
            
             for i in range(self.size):
-                if tmp_game.board[i] == 1 and i != last_move:
+                if tmp_game.board[i] == 1:
                     tmp_game.board[i] = 64
-                    tmp_game_transformed = tmp_game.decision_preparation()[0]
-                    possible_last_positions.append(tmp_game_transformed.board2str())
+                    if tmp_game.get_winner() == Side.NONE:
+                        tmp_game_transformed = tmp_game.decision_preparation()[0]
+                        possible_last_positions.append(tmp_game_transformed.board2str())
                     tmp_game.board[i] = 1
 
         return tuple( possible_last_positions )

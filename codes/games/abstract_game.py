@@ -31,7 +31,7 @@ class abstract_game(abstract_game_display, ABC):
     def if_valid_move(self, move : tuple[int, ...]) -> bool: ...
 
     # Győztes meghatározása
-    # -1 : nincs győztes
+    # Side.NONE : nincs győztes
     @abstractmethod
     def get_winner(self) -> Side: ...
 

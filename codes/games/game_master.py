@@ -13,7 +13,6 @@ class game_master:
 
 
     def play(self) -> None:
-        # TODO: LOAD_DATA
         current_player = self.players[0]
 
         while self.game.get_winner() == -1:
@@ -29,3 +28,4 @@ class game_master:
 
         self.game.print4play()
         print(f"Nyertes: { Side( self.game.get_winner() ).name }!")
+        print(Side( self.game.get_winner() ))
