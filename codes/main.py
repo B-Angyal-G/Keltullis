@@ -19,7 +19,7 @@ from players.random_player import random_player
 
 # UTILS
 from utils.runtime import runtime
-from utils.plot import plot_matrix
+from utils.plot_matrix import plot_matrix
 
 
 
