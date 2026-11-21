@@ -12,10 +12,16 @@ class game_master:
         self.game = game
 
 
-    def play(self) -> None:
+    def play(self) -> float:
         current_player = self.players[0]
 
+        i = 0
         while self.game.get_winner() == -1:
+            i += 1
+            # Döntetlen
+            if i == 100:
+                return 0.5
+
             # Lépés meghatározása
             move = current_player.get_move(self.game)
 
@@ -25,7 +31,6 @@ class game_master:
             # Következő játékos
             current_player = self.players[ self.game.side.value ]
 
-
-        self.game.print4play()
-        print(f"Nyertes: { Side( self.game.get_winner() ).name }!")
-        print(Side( self.game.get_winner() ))
+        # self.game.print4play()
+        # print(f"Nyertes: { Side( self.game.get_winner() ).name }!")
+        return self.game.get_winner().value

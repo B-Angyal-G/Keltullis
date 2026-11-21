@@ -13,7 +13,7 @@ from utils.side import Side
 class minimax_player(abstract_player):
     def get_move(self, game : abstract_game) -> tuple[int, ...]:
         DEPTH = 12
-        return self.minimax(game, DEPTH, self.minimax_random_eval, max, min)[0]
+        return self.minimax(game, DEPTH, self.minimax_random_eval)[0]
 
 
 
