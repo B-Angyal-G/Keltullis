@@ -35,8 +35,3 @@ class homo_sapiens_player(abstract_player):
                 print("\nInvalid input!")
 
         return move
-
-
-
-    def init_data(self, experience_data : dict[ str, tuple[int, int] ]) -> None:
-        pass

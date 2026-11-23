@@ -47,6 +47,8 @@ class abstract_game(abstract_game_display, ABC):
     def get_possible_last_positions(self) -> tuple[str, ...]: ...
 
 
+
+
     # <-- JÁTÉK ELMENTÉSE/STRINGÉ ALAKÍTÁSA -->
     # Állás string-be kódolása
     @abstractmethod
@@ -56,6 +58,8 @@ class abstract_game(abstract_game_display, ABC):
     @classmethod
     @abstractmethod
     def str2board(cls, str_board : str) -> Self: ...
+
+
 
 
 

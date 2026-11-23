@@ -44,7 +44,7 @@ if __name__ == "__main__":
     PELDA = 0
     GAME  = 0
     TRAIN = 1
-    BATTLE = 1
+    BATTLE = 0
 
     if PELDA == 1:
         print("Minimax és Minimax alpha-beta vágás algoritmusok összehasonlítása:")

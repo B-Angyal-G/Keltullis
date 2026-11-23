@@ -7,7 +7,6 @@ from matplotlib.colors import ListedColormap
 
 
 
-
 def plot_matrix(matrix : list[ list[int] ] | NDArray[np.int32]):
     matrix = np.asarray(matrix)
 

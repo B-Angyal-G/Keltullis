@@ -70,6 +70,7 @@ class mcts_player(abstract_player):
 
 
 
+
     # MCTS lépése
     def get_move(self, game : abstract_game, PLAY : int = 0) -> tuple[int, ...]:
         # Ha van nyerő lépés, akkor azt lépjük
@@ -77,28 +78,20 @@ class mcts_player(abstract_player):
         if FORCE_WIN[0] != -1:
             return FORCE_WIN
 
-        # Összes lehetséges lépés meghatározása
-        # TODO: Végiggondolni, hogy transzformációkat lehet-e csökkenteni
+        # Aktuális állás kanonikus alakjának stringjének meghat.
         transformed_game, tran = game.decision_preparation()
         current_game_transformed_str = transformed_game.board2str()
-        inner_possible_moves = transformed_game.get_possible_moves()
 
-        possible_moves = []
+        # Összes lehetséges lépés meghatározása
+        possible_moves = game.get_possible_moves()
         mcts_values = []
-        for inner_move in inner_possible_moves:
-            act_move = game.decision_decoder(inner_move, tran)
-            possible_moves.append( act_move )
-            mcts_val = self.mcts_eval( game.make_move(act_move),  current_game_transformed_str )
+        for move in possible_moves:
+            mcts_val = self.mcts_eval( game.make_move(move),  current_game_transformed_str )
             mcts_values.append( mcts_val ) 
-
         # Max értéknek megfelelő lépéssel visszatérés
         return possible_moves[ self.random_argmax(mcts_values) ]
 
 
-    def random_argmax(self, values):
-        max_value = max(values)
-        indices = [i for i in range(len(values)) if values[i] == max_value]
-        return r.choice(indices)
 
 
     def mcts_eval(self, game : abstract_game, last_position : str) -> float:
@@ -128,8 +121,18 @@ class mcts_player(abstract_player):
 
 
 
+    def random_argmax(self, values):
+        max_value = max(values)
+        indices = [i for i in range(len(values)) if values[i] == max_value]
+        return r.choice(indices)
+
+
+
     def choose4play(self, n : float, w : float) -> float:
         return n
+
+
+
 
 
 
